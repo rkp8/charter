@@ -7,6 +7,7 @@ To run locally:
   -Download zip file
   
   -Configure Local DB:
+  
     -Move the dump folder to your MongoDB bin directorY
     -If you already have a dump folder, merge the two folders
     
