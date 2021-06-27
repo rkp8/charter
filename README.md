@@ -21,7 +21,7 @@ To run locally:
   <br>
   
   ### Current Progress:
-  Simple Proof of concept for two different models on Delinquency: By Year and by FICO. 
+  A simple proof of concept for two different models on Delinquency: By Year and by FICO. 
   Can switch between the two using drop-down menu
   
   
