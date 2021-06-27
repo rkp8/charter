@@ -23,7 +23,8 @@ def data():
     # charts = mongo.db.line
     #
     # result = charts.find_one({'name':'Chart1'})
-     return jsonify({'results': sample(range(1,10), 5)})
+     return jsonify({'results':{'predicted': sample(range(1,10), 5), 'actual': sample(range(1,10), 5)}})
+
 
 
 @app.route('/labels')
