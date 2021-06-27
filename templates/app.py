@@ -1,17 +1,25 @@
-from flask import Flask, render_template, jsonify
-from random import sample
+from flask import Flask, render_template, jsonify, request
 from flask_pymongo import PyMongo
+from pymongo import MongoClient
 from flask_cors import CORS, cross_origin
 
+#client = MongoClient('mongodb+srv://riken:<riken>@cluster0.svy8k.mongodb.net/line?retryWrites=true&w=majority&ssl_cert_reqs=CERT_NONE&authSource=admin')
+
+client = MongoClient('mongodb://localhost:27017') #Local DB for testing purposes, will need to replace with Cloud connection later
+
+db = client['line']
+collection = db['charts']
 
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-app.config['MONGO_DBNAME'] = 'line'
-app.config['MONGO_URI'] = 'mongodb+srv://riken:<riken>@cluster0.svy8k.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
-#
-mongo = PyMongo(app)
+
+# app.config['MONGO_DBNAME'] = 'line'
+# app.config['MONGO_URI'] = 'mongodb+srv://riken:<riken>@cluster0.svy8k.mongodb.net/line?retryWrites=true&w=majority&ssl_cert_reqs=CERT_NONE&authSource=admin'
+
+
+#mongo = PyMongo(app)
 
 @app.route('/')
 @cross_origin()
@@ -20,20 +28,27 @@ def index():
 
 @app.route('/data')
 def data():
-    # charts = mongo.db.line
-    #
-    # result = charts.find_one({'name':'Chart1'})
-     return jsonify({'results':{'predicted': sample(range(1,10), 5), 'actual': sample(range(1,10), 5)}})
+
+    #Search String provided by User from Dropdown Menu
+    id = request.args.get('name')
+    print("Selected: " + id)
+
+    # In MongoDB this finds collection with matching name as Search String in DB
+   # result = collection.find_one({'xlabel': id})
 
 
+    #charts = client.line
+    #print(result['predicted'])
+    #print(result['actual'])
 
-@app.route('/labels')
-def labels():
-    # charts = mongo.db.line
-    #
-    # result = charts.find_one({'name':'Chart1'})
 
-    return jsonify({'results': ['Q1', 'Q2', 'Q3', 'Q4', 'Q5']})
+    #However, since we have no db, a hard-coded if-statement instead of query:
+    # Return correct data
+    if id == "Year":
+        return jsonify({'results':{'predicted': [3, 5, 6, 7, 8], 'actual': [4, 6, 5, 12, 7], 'xlabel': 'Year', 'xvalues': [2005, 2006, 2007, 2008, 2009]}})
+    elif id == "FICO":
+        return jsonify({'results':{'predicted': [9, 8, 6, 4, 2], 'actual': [7, 6, 4, 5, 3], 'xlabel': 'FICO', 'xvalues': [100, 300, 500, 700, 900]}})
+
 
 
 if __name__ == '__main__':
