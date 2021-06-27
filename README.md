@@ -1,6 +1,6 @@
 # Python Flask REST API and JavaScript Chart Visualizer
 
-## Hard-coded (nonDB) branch:
+### Hard-coded (nonDB) branch:
 
 To run locally:
  
