@@ -1,12 +1,11 @@
-from flask import Flask, render_template, jsonify
-from random import sample
+from flask import Flask, render_template, jsonify, request
 from flask_pymongo import PyMongo
 from pymongo import MongoClient
 from flask_cors import CORS, cross_origin
 
-client = MongoClient('mongodb+srv://riken:<riken>@cluster0.svy8k.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&authSource=admin')
+#client = MongoClient('mongodb+srv://riken:<riken>@cluster0.svy8k.mongodb.net/line?retryWrites=true&w=majority&ssl_cert_reqs=CERT_NONE&authSource=admin')
 
-
+client = MongoClient('mongodb://localhost:27017') #Local DB for testing purposes, will need to replace with Cloud connection later
 
 db = client['line']
 collection = db['charts']
@@ -15,8 +14,9 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-app.config['MONGO_DBNAME'] = 'line'
-app.config['MONGO_URI'] = 'mongodb+srv://riken:<riken>@cluster0.svy8k.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+
+# app.config['MONGO_DBNAME'] = 'line'
+# app.config['MONGO_URI'] = 'mongodb+srv://riken:<riken>@cluster0.svy8k.mongodb.net/line?retryWrites=true&w=majority&ssl_cert_reqs=CERT_NONE&authSource=admin'
 
 
 mongo = PyMongo(app)
@@ -28,19 +28,22 @@ def index():
 
 @app.route('/data')
 def data():
+
+    #Search String provided by User from Dropdown Menu
+    id = request.args.get('name')
+    print("Name: " + id)
+
+    # Find collection with matching name as Search String in DB
+    result = collection.find_one({'name': id})
+
+
     #charts = client.line
-    #
-    result = collection.find_one({'name':'Chart1'})
-    return jsonify({'results': result['values']})
+    #print(result['predicted'])
+    #print(result['actual'])
 
+    # Return correct data
+    return jsonify({'results':{'predicted': result['predicted'], 'actual': result['actual'], 'xlabel': result['xlabel'], 'xvalues':result['xvalues']}})
 
-@app.route('/labels')
-def labels():
-    # charts = mongo.db.line
-    #
-    # result = charts.find_one({'name':'Chart1'})
-
-    return jsonify({'results': ['Q1', 'Q2', 'Q3', 'Q4', 'Q5']})
 
 
 if __name__ == '__main__':

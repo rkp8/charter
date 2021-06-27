@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
+           <!-- Retrieves necessary apis such as Chartist.js, jquery, etc.-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
     <script src="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartist-plugin-axistitle@0.0.7/dist/chartist-plugin-axistitle.min.js"></script>
 
+
     <style>
+
+     /*  Styling for Predicted Graph: */
+
       /* Use this selector to override the line style on a given series */
     .ct-series-a .ct-line {
       /* Set the colour of this series line */
@@ -28,6 +33,9 @@
     }
 
 
+
+     /* Styling for Actual Graph: */
+
     .ct-series-b .ct-line {
       /* Set the colour of this series line */
       stroke: black;
@@ -36,7 +44,6 @@
       /* Create a dashed line with a pattern */
       *stroke-dasharray: 10px 20px;
     }
-
     /* This selector overrides the points style on line charts. Points on line charts are actually just very short strokes. This allows you to customize even the point size in CSS */
     .ct-series-b .ct-point {
       /* Colour of your points */
@@ -47,11 +54,18 @@
       *stroke-linecap: square;
     }
 
+
+
+    /* Styling for Refresh Graph Button */
+
     #update{
         margin-left: 40px;
         margin-top: 20px;
 
     }
+
+
+     /* Styling for Graph Title */
 
     [data-x-axis]::before {
     content: attr(data-x-axis);
@@ -74,16 +88,7 @@
     font-size: 25px;
     color: #777;
 
-
 }
-
-.ct-chart{
-alignment: center;
-position: absolute;
-    margin-top: 70px;
-
-}
-
 [data-y-axis]::after {
     content: attr(data-y-axis);
     top: 50%;
@@ -94,81 +99,87 @@ position: absolute;
     transform: rotate(-90deg)translateY(50%);
 }
 
+
+/* Styling for Entire Graph */
+
+.ct-chart{
+alignment: center;
+position: absolute;
+    margin-top: 70px;
+
+}
     </style>
+
   </head>
+
+
 <body>
 
-<button id = "update">Update Chart</button>
+<!-- Dropdown Menu HTML -->
 
-<div id="chartist" class="chartist" data-title-axis="Predicted vs. Actual Metric"></div>
+<form>
+<b> Select a metric from dropdown list </b>
+<select id = "myList" onchange = "storeSelection()" >
+<option> ---Choose Metric--- </option>
+<option> CDR </option>
+<option> FICO </option>
+</select>
+</form>
 
 
+<!-- Refresh Chart Button HTML -->
+
+<button id = "update">Refresh Chart</button>
+
+
+<!-- Title (Hard-coded initially for FICO) -->
+
+<div id="chartist" class="chartist" data-title-axis="Predicted vs. Actual FICO"></div>
+
+
+<!-- The Chart itself:  -->
 
 <div class="ct-chart ct-perfect-fourth"></div>
+
+
 
 <script>
 
 
-var myChart;
-var retrievedLabels;
-var getLabels = $.get(' http://127.0.0.1:5000/labels');
-
-getLabels.done(function(results){
+var myChart;  //The Chart itself
 
 
-    retrievedLabels =
-    [results.results]
+/* AJAX call to locally-hosted MongoDB to retrieve data and update Chart, search is by keyword: FICO (Hard-coded initially) */
+//Will need to add connection to the real Cloud DB later. This is for testing purposes.
 
-
-
-
-
-});
-
-
-var getData = $.get(' http://127.0.0.1:5000/data');
+var getData = $.get(' http://127.0.0.1:5000/data', {'name': 'FICO'});
 
 getData.done(function(results){
 
-var listLabel = retrievedLabels.toString();
-   console.log("list " + listLabel);
+var title = document.getElementById("chartist");
 
-var labelarray = listLabel.split(',');
+var xlabel = results.results.xlabel; //Retrieve X-label name
 
-   console.log("labels " + labelarray[0]);
+title.setAttribute("data-title-axis", "Predicted vs. Actual " + selected + " Across " + xlabel); //Set the Chart Title
+
+
+var labelarray = results.results.xvalues; //Retrieve X-values name
 
     var data = {
-  // A labels array that can contain any sort of values
+
+  // Set the X-values:
   labels: [labelarray[0], labelarray[1], labelarray[2], labelarray[3], labelarray[4]],
+
   // Our series array that contains series objects or in this case series data arrays
+  //Retrieve and plot the data:
   series: [
     results.results.predicted,
     results.results.actual
-  ],
-  plugins: [
-      Chartist.plugins.ctAxisTitle({
-        axisX: {
-          axisTitle: "Quarter",
-          axisClass: "ct-axis-title",
-          offset: {
-            x: 0,
-            y: 50
-          },
-          textAnchor: "middle"
-        },
-        axisY: {
-          axisTitle: "Value",
-          axisClass: "ct-axis-title",
-          offset: {
-            x: 0,
-            y: -1
-          },
-          flipTitle: false
-        }
-      })
-    ]
+  ]
 };
 
+
+//Set Dimensions of Chart:
 var options = {
     width : 800,
     height : 600
@@ -180,75 +191,66 @@ var options = {
 myChart = new Chartist.Line('.ct-chart', data, options);
 });
 
-function updateChart(){
+//Currently selected Data from the dropdown Menu, (initially hard-coded to FICO)
+var selected = "FICO";
 
 
-var getLabels = $.get(' http://127.0.0.1:5000/labels');
+//Function that automatically refreshes chart with requested data based on selection from dropdown menu:
+//Same Code as Above
+//@id param is the selection from the dropdown menu
 
-getLabels.done(function(results){
-
-
-     retrievedLabels =
-    [results.results]
-    console.log("labels " + retrievedLabels);
+function updateChart(id){
 
 
-});
-
-
-var getData = $.get(' http://127.0.0.1:5000/data');
+var getData = $.get(' http://127.0.0.1:5000/data', {'name':id}); //AJAX call to retrieve data for user selection
 
 getData.done(function(results){
 
-var listLabel = retrievedLabels.toString();
-   console.log("list " + listLabel);
+//Set Title:
 
-var labelarray = listLabel.split(',');
+var title = document.getElementById("chartist");
 
-   console.log("labels " + labelarray[0]);
+var xlabel = results.results.xlabel;
+
+//console.log("Predicted vs. Actual " + selected + " Across " + xlabel)
+
+title.setAttribute("data-title-axis", "Predicted vs. Actual " + selected + " Across " + xlabel);
+
+
+var labelarray = results.results.xvalues;
+
+//Graph numerical data:
 
     var data = {
   // A labels array that can contain any sort of values
   labels: [labelarray[0], labelarray[1], labelarray[2], labelarray[3], labelarray[4]],
   // Our series array that contains series objects or in this case series data arrays
   series: [
-     results.results.predicted,
-    results.results.actual
-  ],
-   plugins: [
-      Chartist.plugins.ctAxisTitle({
-        axisX: {
-          axisTitle: "Quarter",
-          axisClass: "ct-axis-title",
-          offset: {
-            x: 0,
-            y: 50
-          },
-          textAnchor: "middle"
-        },
-        axisY: {
-          axisTitle: "Value",
-          axisClass: "ct-axis-title",
-          offset: {
-            x: 0,
-            y: -1
-          },
-          flipTitle: false
-        }
-      })
-    ]
+     results.results.predicted, results.results.actual
+  ]
 };
 
-myChart.update(data);
+myChart.update(data); //Update
 
 
 });
 
 
-
    }
 
-$("#update").on('click', updateChart);
+$("#update").on('click', updateChart(selected)); //Update Chart every time Refresh button is Clicked
+
+
+//Function which stores User Selection from Dropdown Menu:
+
+function storeSelection() {
+var mylist = document.getElementById("myList");
+selected = mylist.options[mylist.selectedIndex].text;
+
+updateChart(selected);
+
+
+}
 
 
 </script>
