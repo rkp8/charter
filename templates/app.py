@@ -1,8 +1,15 @@
 from flask import Flask, render_template, jsonify
 from random import sample
 from flask_pymongo import PyMongo
+from pymongo import MongoClient
 from flask_cors import CORS, cross_origin
 
+client = MongoClient('mongodb+srv://riken:<riken>@cluster0.svy8k.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&authSource=admin')
+
+
+
+db = client['line']
+collection = db['charts']
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -10,7 +17,8 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 app.config['MONGO_DBNAME'] = 'line'
 app.config['MONGO_URI'] = 'mongodb+srv://riken:<riken>@cluster0.svy8k.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
-#
+
+
 mongo = PyMongo(app)
 
 @app.route('/')
@@ -20,9 +28,9 @@ def index():
 
 @app.route('/data')
 def data():
-    charts = mongo.db.line
+    #charts = client.line
     #
-    result = charts.find_one({'name':'Chart1'})
+    result = collection.find_one({'name':'Chart1'})
     return jsonify({'results': result['values']})
 
 
