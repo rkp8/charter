@@ -4,7 +4,7 @@ Hard-coded Proof of Concept (nonDB branch):
 
 To run locally:
 
-  -git clone --single-branch --branch nonDB https://github.com/rkp8/charter.git
+  git clone --single-branch --branch nonDB https://github.com/rkp8/charter.git
      
   
   -Install dependencies: 
