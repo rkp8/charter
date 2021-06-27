@@ -4,7 +4,7 @@ Hard-coded Proof of Concept (nonDB branch):
 
 To run locally:
 
-  -
+  -git clone 
      
   
   -Install dependencies: 
