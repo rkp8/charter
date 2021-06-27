@@ -41,7 +41,7 @@ To run locally:
   
   <br>
   
-  ### Current Progress:
+  ### DB Connection Info:
   -Connected to Local MongoDB
   
   -Current DB contains the following 2 documents:
@@ -50,9 +50,5 @@ To run locally:
 <br>
 
 { "_id" : ObjectId("60d8c7ba1cb1bd5f83331899"), "actual" : [ 7, 6, 4, 5, 3 ], "name" : "Delinquency", "predicted" : [ 9, 8, 6, 4, 2 ], "xlabel" : "FICO", "xvalues" : [ 100, 300, 500, 700, 900 ] }
-  
-  
- 
-  
   
   
