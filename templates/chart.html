@@ -118,23 +118,23 @@ position: absolute;
 <!-- Dropdown Menu HTML -->
 
 <form>
-<b> Select a metric from dropdown list </b>
+<b> Compare Delinquency with:  </b>
 <select id = "myList" onchange = "storeSelection()" >
 <option> ---Choose Metric--- </option>
-<option> CDR </option>
+<option> Year </option>
 <option> FICO </option>
 </select>
 </form>
 
 
-<!-- Refresh Chart Button HTML -->
+<!-- Refresh Chart Button HTML
 
-<button id = "update">Refresh Chart</button>
+<button id = "update">Refresh Chart</button> -->
 
 
 <!-- Title (Hard-coded initially for FICO) -->
 
-<div id="chartist" class="chartist" data-title-axis="Predicted vs. Actual FICO"></div>
+<div id="chartist" class="chartist" data-title-axis="Predicted vs. Actual Delinquency"></div>
 
 
 <!-- The Chart itself:  -->
@@ -158,9 +158,9 @@ getData.done(function(results){
 
 var title = document.getElementById("chartist");
 
-var xlabel = results.results.xlabel; //Retrieve X-label name
+var namelabel = results.results.name; //Retrieve name
 
-title.setAttribute("data-title-axis", "Predicted vs. Actual " + selected + " Across " + xlabel); //Set the Chart Title
+title.setAttribute("data-title-axis", "Predicted vs. Actual " + namelabel + " Across " + selected); //Set the Chart Title
 
 
 var labelarray = results.results.xvalues; //Retrieve X-values name
@@ -210,11 +210,11 @@ getData.done(function(results){
 
 var title = document.getElementById("chartist");
 
-var xlabel = results.results.xlabel;
+var namelabel = results.results.name;
 
-//console.log("Predicted vs. Actual " + selected + " Across " + xlabel)
+//console.log("Predicted vs. Actual " + namelabel + " Across " + selected)
 
-title.setAttribute("data-title-axis", "Predicted vs. Actual " + selected + " Across " + xlabel);
+title.setAttribute("data-title-axis", "Predicted vs. Actual " + namelabel + " Across " + selected);
 
 
 var labelarray = results.results.xvalues;

@@ -19,7 +19,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 # app.config['MONGO_URI'] = 'mongodb+srv://riken:<riken>@cluster0.svy8k.mongodb.net/line?retryWrites=true&w=majority&ssl_cert_reqs=CERT_NONE&authSource=admin'
 
 
-mongo = PyMongo(app)
+#mongo = PyMongo(app)
 
 @app.route('/')
 @cross_origin()
@@ -31,10 +31,10 @@ def data():
 
     #Search String provided by User from Dropdown Menu
     id = request.args.get('name')
-    print("Name: " + id)
+    print("Selection: " + id)
 
     # Find collection with matching name as Search String in DB
-    result = collection.find_one({'name': id})
+    result = collection.find_one({'xlabel': id})
 
 
     #charts = client.line
@@ -42,7 +42,7 @@ def data():
     #print(result['actual'])
 
     # Return correct data
-    return jsonify({'results':{'predicted': result['predicted'], 'actual': result['actual'], 'xlabel': result['xlabel'], 'xvalues':result['xvalues']}})
+    return jsonify({'results':{'name': result['name'], 'predicted': result['predicted'], 'actual': result['actual'], 'xlabel': result['xlabel'], 'xvalues':result['xvalues']}})
 
 
 
