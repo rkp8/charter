@@ -20,10 +20,10 @@ def index():
 
 @app.route('/data')
 def data():
-    # charts = mongo.db.line
+    charts = mongo.db.line
     #
-    # result = charts.find_one({'name':'Chart1'})
-     return jsonify({'results': sample(range(1,10), 5)})
+    result = charts.find_one({'name':'Chart1'})
+    return jsonify({'results': result['values']})
 
 
 @app.route('/labels')
