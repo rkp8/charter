@@ -40,7 +40,6 @@ To run locally:
   -Open chart.html in a browser
   
   <br>
-  
   ### DB Connection Info:
   -Connected to Local MongoDB:   
   
