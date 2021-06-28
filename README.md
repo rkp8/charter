@@ -9,7 +9,21 @@
   -Can switch between the two using drop-down menu
 
 
-### Connection to Local MongoDB (Requires MongoDB installation. Please see nonDB branch to run a demo on Fannie Mae computer):
+  ### DB Connection Info:
+  -Connected to Local MongoDB:   
+  
+    client = MongoClient('mongodb://localhost:27017')
+  
+  -Current DB contains the following 2 documents:
+  
+    { "_id" : ObjectId("60d8c78d1cb1bd5f83331898"), "predicted" : [ 3, 5, 6, 7, 8 ], "name" : "Delinquency", "actual" : [ 4, 6, 5, 12, 7 ], "xlabel" : "Year", "xvalues" : [ 2005, 2006, 2007, 2008, 2009 ] }
+    
+   <br>
+
+    { "_id" : ObjectId("60d8c7ba1cb1bd5f83331899"), "actual" : [ 7, 6, 4, 5, 3 ], "name" : "Delinquency", "predicted" : [ 9, 8, 6, 4, 2 ], "xlabel" : "FICO", "xvalues" : [ 100, 300, 500, 700, 900 ] }
+  
+  
+### (Requires MongoDB installation. Please see nonDB branch to run a demo on Fannie Mae computer):
 
 To run locally:
  
@@ -38,20 +52,4 @@ To run locally:
   
   
   -Open chart.html in a browser
-  <br>
-  
  
-  ### DB Connection Info:
-  -Connected to Local MongoDB:   
-  
-    client = MongoClient('mongodb://localhost:27017')
-  
-  -Current DB contains the following 2 documents:
-  
-    { "_id" : ObjectId("60d8c78d1cb1bd5f83331898"), "predicted" : [ 3, 5, 6, 7, 8 ], "name" : "Delinquency", "actual" : [ 4, 6, 5, 12, 7 ], "xlabel" : "Year", "xvalues" : [ 2005, 2006, 2007, 2008, 2009 ] }
-    
-   <br>
-
-    { "_id" : ObjectId("60d8c7ba1cb1bd5f83331899"), "actual" : [ 7, 6, 4, 5, 3 ], "name" : "Delinquency", "predicted" : [ 9, 8, 6, 4, 2 ], "xlabel" : "FICO", "xvalues" : [ 100, 300, 500, 700, 900 ] }
-  
-  
